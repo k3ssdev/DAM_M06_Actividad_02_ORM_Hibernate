@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="notaslinkia"/>
+  <table-filter match-name="profesores"/>
+  <table-filter match-name="historial"/>
+  <table-filter match-name="alumnos"/>
+  <table-filter match-name="notas"/>
+  <table-filter match-name="modulos"/>
+</hibernate-reverse-engineering>
