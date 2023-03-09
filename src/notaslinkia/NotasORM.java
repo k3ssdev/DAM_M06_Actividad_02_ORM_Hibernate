@@ -18,7 +18,6 @@ import resources.Modulos;
 import resources.Historial;
 import resources.HibernateUtil;
 
-
 /**
  *
  * @author alber
