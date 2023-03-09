@@ -17,12 +17,17 @@ import resources.Alumnos;
 import resources.Modulos;
 import resources.Notas;
 import resources.Profesores;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class TestORM {
 
+    
     public static void main(String[] args) {
        
+        // Desactivar mensajes de registro de Hibernate
+        Logger.getLogger("org.hibernate").setLevel(Level.OFF);
         NotasORM miGestor = new NotasORM();
         
         
