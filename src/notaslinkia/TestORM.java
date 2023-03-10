@@ -32,6 +32,8 @@ public class TestORM {
         
         
         Alumnos login = new Alumnos(1);
+
+        //NotasORM.borrarAlumno(1);
          
        NotasORM.consulta("select a from Alumnos a where idAlumno=1");
        //miGestor.close();

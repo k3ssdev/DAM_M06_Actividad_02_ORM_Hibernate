@@ -24,8 +24,8 @@ import resources.HibernateUtil;
  */
 public class NotasORM {
 
-    private Session sesion;
-    private Transaction tx;
+    private static Session sesion;
+    private static Transaction tx;
     
     public NotasORM() {
         sesion = HibernateUtil.getSessionFactory().openSession();
@@ -47,7 +47,7 @@ public class NotasORM {
         session.close();
     }
 
-    public void insertarAlumno(Alumnos a) {
+    public void insertarAlumno(Alumnos a) throws ConstraintViolationException {
         try {// Siempre se trabaja con transacciones
             tx = sesion.beginTransaction();
             sesion.save(a);
@@ -65,13 +65,11 @@ public class NotasORM {
         tx.commit();
     }
 
-    public void modificarNombreAlumno(Alumnos a) {
-        modificarAlumno(a);
-    }
 
-    public void borrarAlumno(Alumnos a) {
+
+    public static void borrarAlumno(int i) {
         tx = sesion.beginTransaction();
-        sesion.delete(a);
+        sesion.delete(sesion.get(Alumnos.class, i));
         tx.commit();
     }
 
