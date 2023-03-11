@@ -521,7 +521,7 @@ public class NotasORM {
             List<Notas> notas = session.createQuery("FROM Notas WHERE idModulo = :idModulo")
                     .setParameter("idModulo", id).list();
             System.out.println("Alumnos que han cursado el módulo " + modulo.getNombre() + " con id " + id + ":");
-    
+
             // Imprimir encabezado de la tabla en morado
             System.out.println("+------------+-----------------+------------+----------------------+-------+");
             System.out.printf(
@@ -529,7 +529,7 @@ public class NotasORM {
                     "ID Modulo", "Nombre Modulo", "ID Alumno",
                     "Nombre Alumno", "Nota");
             System.out.println("+------------+-----------------+------------+----------------------+-------+");
-    
+
             // Imprimir cada registro en la tabla
             for (Notas nota : notas) {
                 Alumnos alumno = session.get(Alumnos.class, nota.getIdAlumno());
@@ -542,14 +542,13 @@ public class NotasORM {
         } catch (Exception ex) {
             if (tx != null) {
                 tx.rollback();
+
             }
-            throw ex;
-        } finally {
+
             sc.close();
             session.close();
         }
     }
-    
 
     public void listarModulosPorAlumno(Integer idAlumno) {
         Scanner sc = new Scanner(System.in);
@@ -633,6 +632,14 @@ public class NotasORM {
     }
 
     public void consultarNotas() {
+    }
+
+    public boolean comprobarProfesor(String usuario, String password) {
+        return false;
+    }
+
+    public boolean comprobarAlumnor(String usuario, String password) {
+        return false;
     }
 
 }

@@ -37,16 +37,16 @@ public class TestORM {
         while (true) {
             System.out.println("Bienvenido al sistema de gestión académica.");
             System.out.println("Por favor, seleccione su opción:");
-            System.out.println("A. Menú de administrador");
-            System.out.println("B. Menú de profesor");
-            System.out.println("C. Menú de alumno");
-            System.out.println("D. Salir");
+            System.out.println("1. Menú de administrador");
+            System.out.println("2. Menú de profesor");
+            System.out.println("3. Menú de alumno");
+            System.out.println("0. Salir");
 
             String opcion = sc.nextLine();
-            //sc.nextLine(); // Limpiar buffer
+            // sc.nextLine(); // Limpiar buffer
 
             switch (opcion) {
-                case "A":
+                case "1":
                     System.out.println("Ingrese la contraseña:");
                     String password = sc.nextLine();
                     // Contraseña de administrador valida en tabla profesores
@@ -64,6 +64,11 @@ public class TestORM {
                     System.out.println("6. Listar TODOS los alumnos");
                     System.out.println("7. Listar alumnos por módulo");
                     System.out.println("8. Eliminar alumno");
+                    System.out.println("9. Listar tabla notas");
+                    System.out.println("10. Listar tabla profesores");
+                    System.out.println("11. Modificar profesor");
+                    System.out.println("12. Eliminar profesor");
+                    System.out.println("0. Salir");
 
                     int opcionAdmin = sc.nextInt();
                     sc.nextLine();
@@ -102,6 +107,26 @@ public class TestORM {
                             // Llamar a método para eliminar alumno
                             gestor.borrarAlumno();
                             break;
+                        case 9:
+                            // Llamar a método para listar tabla notas
+                            gestor.consultarNotas();
+                            break;
+                        case 10:
+                            // Llamar a método para listar tabla profesores
+                            gestor.consultarTodosProfesores();
+                            break;
+                        case 11:
+                            // Llamar a método para modificar profesor
+                            gestor.modificarProfesorId();
+                            break;
+                        case 12:
+                            // Llamar a método para eliminar profesor
+                            gestor.borrarProfesor();
+                            break;
+                        case 0:
+                            System.out.println("Saliendo...");
+                            System.exit(0);
+                            break;
                         default:
                             System.out.println("Opción no válida.");
                             break;
@@ -109,6 +134,19 @@ public class TestORM {
 
                     break;
                 case "B":
+
+                    System.out.println("Ingrese su usuario:");
+                    String userProf = sc.nextLine();
+
+                    System.out.println("Ingrese su contraseña:");
+                    String passProf = sc.nextLine();
+
+                    // Comprobar si el usuario y la contraseña son correctos
+                    if (!gestor.comprobarProfesor(userProf, passProf)) {
+                        System.out.println("Usuario o contraseña incorrectos. Acceso denegado.");
+                        break;
+                    }
+
                     System.out.println("Menú de profesor:");
                     System.out.println("1. Insertar módulo");
                     System.out.println("2. Listar TODOS los módulos");
@@ -157,6 +195,19 @@ public class TestORM {
 
                     break;
                 case "C":
+
+                    System.out.println("Ingrese su usuario:");
+                    String userAlumno = sc.nextLine();
+
+                    System.out.println("Ingrese su contraseña:");
+                    String passAlumno = sc.nextLine();
+
+                    // Comprobar si el usuario y la contraseña son correctos
+                    if (!gestor.comprobarAlumnor(userAlumno, passAlumno)) {
+                        System.out.println("Usuario o contraseña incorrectos. Acceso denegado.");
+                        break;
+                    }
+
                     System.out.println("Menú de alumno:");
                     System.out.println("1. Consultar notas");
                     System.out.println("2. Listar módulos de los que es alumno");
