@@ -47,6 +47,8 @@ public class Notas  implements java.io.Serializable {
     public float getNotas() {
         return this.notas;
     }
+
+   
     
     public void setNotas(float notas) {
         this.notas = notas;

@@ -10,6 +10,8 @@ package notaslinkia;
  * @author alber
  */
 import java.util.List;
+import java.util.Scanner;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -26,23 +28,166 @@ public class TestORM {
 
         // Desactivar mensajes de registro de Hibernate
         Logger.getLogger("org.hibernate").setLevel(Level.OFF);
-        NotasORM miGestor = new NotasORM();
 
-        Alumnos login = new Alumnos("Alberto", "alberto", "1234");
+        // Crear el gestor de sesiones
+        NotasORM gestor = new NotasORM();
 
-        // NotasORM.borrarAlumno(1);
+        Scanner sc = new Scanner(System.in);
 
-        NotasORM.insertarAlumno(login);
+        while (true) {
+            System.out.println("Bienvenido al sistema de gestión académica.");
+            System.out.println("Por favor, seleccione su opción:");
+            System.out.println("A. Menú de administrador");
+            System.out.println("B. Menú de profesor");
+            System.out.println("C. Menú de alumno");
+            System.out.println("D. Salir");
 
-        NotasORM.consulta("select a from Alumnos a where idAlumno=1");
-        // miGestor.close();
+            String opcion = sc.nextLine();
+            //sc.nextLine(); // Limpiar buffer
 
-        if (miGestor.existeAlumno(login)) {
-            System.out.println("El alumno ya existe.");
-        } else {
-            miGestor.insertarAlumno(login);
-            System.out.println("Alumno dado de alta");
+            switch (opcion) {
+                case "A":
+                    System.out.println("Ingrese la contraseña:");
+                    String password = sc.nextLine();
+                    // Contraseña de administrador valida en tabla profesores
+                    if (!password.equals("admin")) {
+                        System.out.println("Contraseña incorrecta. Acceso denegado.");
+                        break;
+                    }
+
+                    System.out.println("Menú de administrador:");
+                    System.out.println("1. Listar tabla historial");
+                    System.out.println("2. Insertar módulo");
+                    System.out.println("3. Listar TODOS los módulos");
+                    System.out.println("4. Eliminar módulo");
+                    System.out.println("5. Insertar alumno");
+                    System.out.println("6. Listar TODOS los alumnos");
+                    System.out.println("7. Listar alumnos por módulo");
+                    System.out.println("8. Eliminar alumno");
+
+                    int opcionAdmin = sc.nextInt();
+                    sc.nextLine();
+
+                    switch (opcionAdmin) {
+                        case 1:
+                            // Llamar a método para listar historial
+                            gestor.listarHistorial();
+
+                            break;
+                        case 2:
+                            // Llamar a método para insertar módulo
+                            gestor.insertarModulo();
+                            break;
+                        case 3:
+                            // Llamar a método para listar todos los módulos
+                            gestor.listarModulos();
+                            break;
+                        case 4:
+                            // Llamar a método para eliminar módulo
+                            gestor.borrarModulo();
+                            break;
+                        case 5:
+                            // Llamar a método para insertar alumno
+                            gestor.insertarAlumno();
+                            break;
+                        case 6:
+                            // Llamar a método para listar todos los alumnos
+                            gestor.consultarTodosAlumnos();
+                            break;
+                        case 7:
+                            // Llamar a método para listar alumnos por módulo
+                            gestor.listarAlumnosPorModulo();
+                            break;
+                        case 8:
+                            // Llamar a método para eliminar alumno
+                            gestor.borrarAlumno();
+                            break;
+                        default:
+                            System.out.println("Opción no válida.");
+                            break;
+                    }
+
+                    break;
+                case "B":
+                    System.out.println("Menú de profesor:");
+                    System.out.println("1. Insertar módulo");
+                    System.out.println("2. Listar TODOS los módulos");
+                    System.out.println("3. Eliminar módulo");
+                    System.out.println("4. Insertar alumno");
+                    System.out.println("5. Listar TODOS los alumnos");
+                    System.out.println("6. Listar alumnos por módulo");
+                    System.out.println("7. Eliminar alumno");
+
+                    int opcionProfesor = sc.nextInt();
+                    sc.nextLine();
+
+                    switch (opcionProfesor) {
+                        case 1:
+                            // Llamar a método para insertar módulo
+                            gestor.insertarModulo();
+                            break;
+                        case 2:
+                            // Llamar a método para listar todos los módulos
+                            gestor.listarModulos();
+                            break;
+                        case 3:
+                            // Llamar a método para eliminar módulo
+                            gestor.borrarModulo();
+                            break;
+                        case 4:
+                            // Llamar a método para insertar alumno
+                            gestor.insertarAlumno();
+                            break;
+                        case 5:
+                            // Llamar a método para listar todos los alumnos
+                            gestor.consultarTodosAlumnos();
+                            break;
+                        case 6:
+                            // Llamar a método para listar alumnos por módulo
+                            gestor.listarAlumnosPorModulo();
+                            break;
+                        case 7:
+                            // Llamar a método para eliminar alumno
+                            gestor.borrarAlumno();
+                            break;
+                        default:
+                            System.out.println("Opción no válida.");
+                            break;
+                    }
+
+                    break;
+                case "C":
+                    System.out.println("Menú de alumno:");
+                    System.out.println("1. Consultar notas");
+                    System.out.println("2. Listar módulos de los que es alumno");
+
+                    int opcionAlumno = sc.nextInt();
+                    sc.nextLine();
+
+                    switch (opcionAlumno) {
+                        case 1:
+                            // Llamar a método para consultar notas
+                            gestor.consultarNotas();
+                            break;
+                        case 2:
+                            // Llamar a método para listar módulos de los que es alumno
+                            gestor.listarAlumnosPorModulo();
+                            break;
+                        default:
+                            System.out.println("Opción no válida.");
+                            break;
+                    }
+
+                    break;
+                case "D":
+                    System.out.println("Hasta luego.");
+                    sc.close();
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+                    break;
+            }
         }
-
     }
 }
