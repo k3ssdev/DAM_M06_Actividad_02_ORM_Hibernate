@@ -43,9 +43,11 @@ public class TestORM {
             System.out.println("0. Salir");
 
             String opcion = sc.nextLine();
-            // sc.nextLine(); // Limpiar buffer
+           
 
             switch (opcion) {
+
+                
                 case "1":
                     System.out.println("Ingrese la contraseña:");
                     String password = sc.nextLine();
@@ -55,6 +57,9 @@ public class TestORM {
                         break;
                     }
 
+                    Boolean menuAdmin= true;
+
+                    while (menuAdmin) {
                     System.out.println("Menú de administrador:");
                     System.out.println("1. Listar tabla historial");
                     System.out.println("2. Insertar módulo");
@@ -71,7 +76,7 @@ public class TestORM {
                     System.out.println("0. Salir");
 
                     int opcionAdmin = sc.nextInt();
-                    sc.nextLine();
+                    //sc.nextLine();
 
                     switch (opcionAdmin) {
                         case 1:
@@ -125,15 +130,16 @@ public class TestORM {
                             break;
                         case 0:
                             System.out.println("Saliendo...");
-                            System.exit(0);
+                            menuAdmin = false;
                             break;
                         default:
                             System.out.println("Opción no válida.");
                             break;
                     }
+                    }
 
                     break;
-                case "B":
+                case "2":
 
                     System.out.println("Ingrese su usuario:");
                     String userProf = sc.nextLine();
@@ -147,6 +153,11 @@ public class TestORM {
                         break;
                     }
 
+                    // Bucle para mostrar el menú de profesor hasta que se elija la opción de salir
+
+                    Boolean menuProfesor= true;
+
+                    while (menuProfesor) {
                     System.out.println("Menú de profesor:");
                     System.out.println("1. Insertar módulo");
                     System.out.println("2. Listar TODOS los módulos");
@@ -155,6 +166,7 @@ public class TestORM {
                     System.out.println("5. Listar TODOS los alumnos");
                     System.out.println("6. Listar alumnos por módulo");
                     System.out.println("7. Eliminar alumno");
+                    System.out.println("0. Salir");
 
                     int opcionProfesor = sc.nextInt();
                     sc.nextLine();
@@ -163,6 +175,7 @@ public class TestORM {
                         case 1:
                             // Llamar a método para insertar módulo
                             gestor.insertarModulo();
+                            // volver al menu profesor
                             break;
                         case 2:
                             // Llamar a método para listar todos los módulos
@@ -188,14 +201,21 @@ public class TestORM {
                             // Llamar a método para eliminar alumno
                             gestor.borrarAlumno();
                             break;
+                        case 0:
+                            System.out.println("Saliendo...");
+                            menuProfesor = false;
+                            break;
                         default:
                             System.out.println("Opción no válida.");
                             break;
                     }
+                    }
 
                     break;
-                case "C":
+                case "3":
+                    Boolean menuAlumno = true;
 
+                    while (menuAlumno) {
                     System.out.println("Ingrese su usuario:");
                     String userAlumno = sc.nextLine();
 
@@ -211,6 +231,7 @@ public class TestORM {
                     System.out.println("Menú de alumno:");
                     System.out.println("1. Consultar notas");
                     System.out.println("2. Listar módulos de los que es alumno");
+                    System.out.println("0. Salir");
 
                     int opcionAlumno = sc.nextInt();
                     sc.nextLine();
@@ -224,13 +245,18 @@ public class TestORM {
                             // Llamar a método para listar módulos de los que es alumno
                             gestor.listarAlumnosPorModulo();
                             break;
+                        case 0:
+                            System.out.println("Saliendo...");
+                            menuAlumno = false;
+                            break;
                         default:
                             System.out.println("Opción no válida.");
                             break;
                     }
+                    }
 
                     break;
-                case "D":
+                case "0":
                     System.out.println("Hasta luego.");
                     sc.close();
                     System.exit(0);

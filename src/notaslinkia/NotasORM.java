@@ -521,7 +521,7 @@ public class NotasORM {
             List<Notas> notas = session.createQuery("FROM Notas WHERE idModulo = :idModulo")
                     .setParameter("idModulo", id).list();
             System.out.println("Alumnos que han cursado el módulo " + modulo.getNombre() + " con id " + id + ":");
-
+    
             // Imprimir encabezado de la tabla en morado
             System.out.println("+------------+-----------------+------------+----------------------+-------+");
             System.out.printf(
@@ -529,27 +529,24 @@ public class NotasORM {
                     "ID Modulo", "Nombre Modulo", "ID Alumno",
                     "Nombre Alumno", "Nota");
             System.out.println("+------------+-----------------+------------+----------------------+-------+");
-
-            // Imprimir cada registro en la tabla
-            for (Notas nota : notas) {
-                Alumnos alumno = session.get(Alumnos.class, nota.getIdAlumno());
-                float notaFloat = nota.getNotas();
-                System.out.printf("| %-10s | %-15s | %-10d | %-20s | %-5.2f |\n", id, modulo.getNombre(),
-                        alumno.getIdAlumno(), alumno.getNombre(), notaFloat);
-                System.out.println("+------------+-----------------+------------+----------------------+-------+");
+    
+            // Imprimir cada registro en la tabla si hay notas
+            if (!notas.isEmpty()) {
+                for (Notas nota : notas) {
+                    Alumnos alumno = session.get(Alumnos.class, nota.getIdAlumno());
+                    //float notaFloat = nota.getNotas();
+                    System.out.printf("| %-10d | %-15s | %-10d | %-20s | %-5.2f |\n", id, modulo.getNombre(), alumno.getIdAlumno(), alumno.getNombre(), nota.getNotas());
+                    System.out.println("+------------+-----------------+------------+----------------------+-------+");
+                }
+            } else {
+                System.out.println("No se encontraron alumnos para el módulo " + modulo.getNombre() + " con id " + id);
             }
-            tx.commit();
+    
         } catch (Exception ex) {
-            if (tx != null) {
-                tx.rollback();
-
-            }
-
-            sc.close();
             session.close();
         }
     }
-
+    
     public void listarModulosPorAlumno(Integer idAlumno) {
         Scanner sc = new Scanner(System.in);
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -635,6 +632,17 @@ public class NotasORM {
     }
 
     public boolean comprobarProfesor(String usuario, String password) {
+        
+        // Obtener el profesor con el nombre de usuario dado
+        Profesores profesor = (Profesores) sesion.createQuery("FROM Profesores WHERE nom_user = :usuario")
+                .setParameter("usuario", usuario).uniqueResult();
+
+        // Si el profesor existe, comprobar la contraseña
+        if (profesor != null) {
+            return profesor.getPassword().equals(password);
+        }
+
+        // Si el profesor no existe, devolver false
         return false;
     }
 
