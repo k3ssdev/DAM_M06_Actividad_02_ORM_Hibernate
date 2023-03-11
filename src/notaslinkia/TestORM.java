@@ -20,33 +20,29 @@ import resources.Profesores;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class TestORM {
 
-    
     public static void main(String[] args) {
-       
+
         // Desactivar mensajes de registro de Hibernate
         Logger.getLogger("org.hibernate").setLevel(Level.OFF);
         NotasORM miGestor = new NotasORM();
-        
-        
-        Alumnos login = new Alumnos(1);
 
-        //NotasORM.borrarAlumno(1);
-         
-       NotasORM.consulta("select a from Alumnos a where idAlumno=1");
-       //miGestor.close();
+        Alumnos login = new Alumnos("Alberto", "alberto", "1234");
 
-     if (miGestor.existeAlumno(login)) {
-       System.out.println("El alumno ya existe.");
-   } else {
-       miGestor.insertarAlumno(login);
-       System.out.println("Alumno dado de alta");
-   }
+        // NotasORM.borrarAlumno(1);
 
-       
+        NotasORM.insertarAlumno(login);
+
+        NotasORM.consulta("select a from Alumnos a where idAlumno=1");
+        // miGestor.close();
+
+        if (miGestor.existeAlumno(login)) {
+            System.out.println("El alumno ya existe.");
+        } else {
+            miGestor.insertarAlumno(login);
+            System.out.println("Alumno dado de alta");
+        }
+
     }
 }
-
-        

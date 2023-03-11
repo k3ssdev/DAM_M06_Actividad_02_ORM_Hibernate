@@ -17,11 +17,18 @@ public class Alumnos  implements java.io.Serializable {
     public Alumnos() {
     }
 
-    public Alumnos(String nombre, String nomUser, String password) {
-       this.nombre = nombre;
+    public Alumnos(int idAlumno, String nombre, String nomUser, String password) {
+       this.idAlumno = idAlumno;
+        this.nombre = nombre;
        this.nomUser = nomUser;
        this.password = password;
     }
+
+    public Alumnos(String nombre, String nomUser, String password) {
+         this.nombre = nombre;
+        this.nomUser = nomUser;
+        this.password = password;
+     }
    
      public Alumnos(int idAlumno) {
        this.idAlumno = idAlumno;

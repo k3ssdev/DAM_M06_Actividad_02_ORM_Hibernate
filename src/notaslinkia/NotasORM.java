@@ -47,7 +47,7 @@ public class NotasORM {
         session.close();
     }
 
-    public void insertarAlumno(Alumnos a) throws ConstraintViolationException {
+    public static void insertarAlumno(Alumnos a) throws ConstraintViolationException {
         try {// Siempre se trabaja con transacciones
             tx = sesion.beginTransaction();
             sesion.save(a);
