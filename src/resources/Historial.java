@@ -9,48 +9,48 @@ package resources;
 public class Historial  implements java.io.Serializable {
 
 
-     private Integer id;
-     private String tipo;
-     private int user;
-     private String detalle;
+    private Integer id;
+    private String tipo;
+    private int user;
+    private String detalle;
 
-    public Historial() {
-    }
+   public Historial() {
+   }
 
-    public Historial(String tipo, int user, String detalle) {
-       this.tipo = tipo;
-       this.user = user;
-       this.detalle = detalle;
-    }
+   public Historial(String tipo, int user, String detalle) {
+      this.tipo = tipo;
+      this.user = user;
+      this.detalle = detalle;
+   }
+  
+   public Integer getId() {
+       return this.id;
+   }
    
-    public Integer getId() {
-        return this.id;
-    }
-    
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    public String getTipo() {
-        return this.tipo;
-    }
-    
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-    public int getUser() {
-        return this.user;
-    }
-    
-    public void setUser(int user) {
-        this.user = user;
-    }
-    public String getDetalle() {
-        return this.detalle;
-    }
-    
-    public void setDetalle(String detalle) {
-        this.detalle = detalle;
-    }
+   public void setId(Integer id) {
+       this.id = id;
+   }
+   public String getTipo() {
+       return this.tipo;
+   }
+   
+   public void setTipo(String tipo) {
+       this.tipo = tipo;
+   }
+   public int getUser() {
+       return this.user;
+   }
+   
+   public void setUser(int user) {
+       this.user = user;
+   }
+   public String getDetalle() {
+       return this.detalle;
+   }
+   
+   public void setDetalle(String detalle) {
+       this.detalle = detalle;
+   }
 
 
 

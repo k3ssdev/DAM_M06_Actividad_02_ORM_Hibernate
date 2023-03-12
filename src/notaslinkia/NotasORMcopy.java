@@ -412,7 +412,7 @@ public class NotasORMcopy {
 
             // Imprimir cada registro en la tabla
             for (Notas nota : notas) {
-                Alumnos alumno = session.get(Alumnos.class, nota.getIdAlumno());
+                Alumnos alumno = session.get(Alumnos.class, nota.getAlumnos());
                 float notaFloat = nota.getNotas();
                 System.out.printf("| %-10s | %-15s | %-10d | %-20s | %-5.2f |\n", id, modulo.getNombre(),
                         alumno.getIdAlumno(), alumno.getNombre(), notaFloat);
@@ -448,8 +448,8 @@ public class NotasORMcopy {
             }
 
             // Obtener las notas de todos los módulos para el alumno dado
-            List<Notas> notas = session.createQuery("FROM Notas WHERE idAlumno = :idAlumno")
-                    .setParameter("idAlumno", alumno.getIdAlumno()).list();
+            List<Notas> notas = session.createQuery("FROM Notas WHERE alumnos = :alumnos")
+                    .setParameter("alumnos", alumno.getIdAlumno()).list();
 
             System.out.println("Módulos cursados por " + alumno.getNombre() + " con id " + alumno.getIdAlumno() + ":");
 
@@ -461,8 +461,8 @@ public class NotasORMcopy {
             System.out.println("+------------+----------------------+-----------------+-------+");
 
             for (Notas nota : notas) {
-                Alumnos alumnos = session.get(Alumnos.class, nota.getIdAlumno());
-                Modulos modulo = session.get(Modulos.class, nota.getIdModulo());
+                Alumnos alumnos = session.get(Alumnos.class, nota.getAlumnos());
+                Modulos modulo = session.get(Modulos.class, nota.getModulos());
                 float notaFloat = nota.getNotas();
 
                 System.out.printf("| %-10d | %-20s | %-15s | %-5.2f |\n", alumno.getIdAlumno(), alumno.getNombre(),

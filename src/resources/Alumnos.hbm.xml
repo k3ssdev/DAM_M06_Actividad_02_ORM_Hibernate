@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 09-mar-2023 22:01:35 by Hibernate Tools 4.3.1 -->
+<!-- Generated 12-mar-2023 16:24:19 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="resources.Alumnos" table="alumnos" catalog="notaslinkia" optimistic-lock="version">
         <id name="idAlumno" type="java.lang.Integer">
@@ -17,5 +17,11 @@
         <property name="password" type="string">
             <column name="password" length="25" not-null="true" />
         </property>
+        <set name="notases" table="notas" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_alumno" not-null="true" />
+            </key>
+            <one-to-many class="resources.Notas" />
+        </set>
     </class>
 </hibernate-mapping>
