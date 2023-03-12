@@ -411,7 +411,7 @@ public class NotasORM {
             }
             System.out.println("Error al insertar alumno: " + ex.getMessage()); // Se imprime un mensaje de error.
         } finally { // Se asegura de que los recursos se liberen correctamente.
-            sc.close();
+            //sc.close();
             session.close();
         }
     }
@@ -453,7 +453,7 @@ public class NotasORM {
 
         } finally {
             // Cerrar el objeto Scanner y la sesión de Hibernate
-            sc.close();
+            //sc.close();
             session.close();
         }
     }

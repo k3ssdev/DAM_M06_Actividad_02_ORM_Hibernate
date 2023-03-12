@@ -10,16 +10,8 @@ import java.io.Console;
  *
  * @author alber
  */
-import java.util.List;
-import java.util.Scanner;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import resources.Alumnos;
-import resources.Modulos;
-import resources.Notas;
-import resources.Profesores;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -113,18 +105,19 @@ public class TestORM {
                         Scanner scanner = new Scanner(System.in);
 
                         switch (opcionProfesor) {
+                           
                             case 1:
                                 // Llamar a método para insertar módulo
                                 System.out.print("\033[H\033[2J");
                                 gestor.insertarModulo();
-                                // volver al menu profesor
+                                System.out.println("\nPresione una tecla para continuar...");
+                                scanner.nextLine();
                                 break;
                             case 2:
                                 // Llamar a método para listar todos los módulos
                                 System.out.print("\033[H\033[2J");
                                 gestor.listarModulos();
                                 System.out.println("\nPresione una tecla para continuar...");
-
                                 scanner.nextLine();
 
                                 break;
@@ -171,7 +164,6 @@ public class TestORM {
                                 System.out.println("Saliendo...");
                                 menuProfesor = false;
                                 System.out.println("\nPresione una tecla para continuar...");
-
                                 scanner.nextLine();
                                 break;
                             default:
@@ -185,15 +177,18 @@ public class TestORM {
                     Boolean menuAlumno = true;
 
                     while (menuAlumno) {
-                        System.out.println("Ingrese su usuario:");
+                    // Limpiar pantalla
+                        System.out.print("\033[H\033[2J");
+                        System.out.print("\033[32m");
+                        System.out.print("Ingrese su usuario: ");
+                        System.out.print("\033[0m");
                         String userAlumno = sc.nextLine();
-
-                        System.out.println("Ingrese su contraseña:");
-                        // String passAlumno = sc.nextLine();
 
                         // Comprobar si el usuario y la contraseña son correctos
                         Console adminConsole = System.console();
+                        System.out.print("\033[32m");
                         char[] readPassword = adminConsole.readPassword("Ingresa la contraseña: ");
+                        System.out.print("\033[0m");
                         String passAlumno = new String(readPassword);
                         if (!gestor.comprobarAlumnor(userAlumno, passAlumno)) {
                             System.out.println("Usuario o contraseña incorrectos. Acceso denegado.");
