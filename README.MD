@@ -38,4 +38,4 @@ Para utilizar este proyecto, debe seguir los siguientes pasos:
 
 ## Créditos
 
-Este proyecto fue creado por Alberto Pérez del Río para un ejercicio de programación en Java. Se basa en el tutorial de Hibernate de [Java Brains](https://javabrains.io/courses/hibernate-jpa/), los apuntes de clase y los enlaces relacionados con la actividad 2.
+Este proyecto fue creado por Alberto Pérez del Río para un ejercicio de programación en Java de la asignatura de Acceso a Datos del ciclo superior de Desarrollo de Aplicaciones Multiplataforma.
