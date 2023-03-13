@@ -603,7 +603,7 @@ public class NotasORM {
                     .setParameter("id_modulo", modulo.getId()).list();
             System.out.println(
                     "\nAlumnos que han cursado el módulo " + modulo.getNombre() + " con id " + modulo.getId() + ":");
- 
+
             // Imprimir encabezado de la tabla
             System.out.println("+------------+----------------------+-----------------+-------+");
             System.out.printf(
@@ -612,10 +612,13 @@ public class NotasORM {
             System.out.println("+------------+----------------------+-----------------+-------+");
 
             for (Notas nota : notas) {
-                
-                // Esta línea obtiene un objeto de la clase Alumnos utilizando el ID de alumno asociado a la nota
-                // Se utiliza el método "get" de la sesión de Hibernate para obtener el objeto de la base de datos
-                // La clase "Alumnos" se especifica como primer parámetro y se utiliza el método "getIdAlumno" de la nota para obtener el ID de alumno asociado
+
+                // Esta línea obtiene un objeto de la clase Alumnos utilizando el ID de alumno
+                // asociado a la nota
+                // Se utiliza el método "get" de la sesión de Hibernate para obtener el objeto
+                // de la base de datos
+                // La clase "Alumnos" se especifica como primer parámetro y se utiliza el método
+                // "getIdAlumno" de la nota para obtener el ID de alumno asociado
                 Alumnos alumno = session.get(Alumnos.class, nota.getAlumnos().getIdAlumno());
                 float notaFloat = nota.getNotas();
 
@@ -920,11 +923,11 @@ public class NotasORM {
         Transaction tx = null;
         NotasORM notasORM = new NotasORM();
         notasORM.consultarTodosAlumnos();
-    
+
         try {
             tx = session.beginTransaction();
             Scanner sc = new Scanner(System.in);
-    
+
             // Pedir datos al usuario
             System.out.println("Introduce el id del alumno:");
             int idAlumno = sc.nextInt();
@@ -934,19 +937,19 @@ public class NotasORM {
             int idModulo = sc.nextInt();
             System.out.println("Introduce la nota:");
             float nota = sc.nextFloat();
-    
+
             // Obtener el objeto Alumnos correspondiente al idAlumno
             Alumnos alumno = session.get(Alumnos.class, idAlumno);
-    
+
             // Obtener el objeto Modulos correspondiente al idModulo
             Modulos modulo = session.get(Modulos.class, idModulo);
-    
+
             // Crear el objeto Notas y asignarle el alumno, módulo y nota correspondientes
             Notas notas = new Notas(alumno, modulo, nota);
-    
+
             // Guardar el objeto Notas en la base de datos
             session.save(notas);
-    
+
             tx.commit();
             System.out.println("Nota insertada correctamente.");
         } catch (Exception ex) {
@@ -958,7 +961,6 @@ public class NotasORM {
             session.close();
         }
     }
-    
 
     // Actualizar nota de un alumno en la base de datos
     public void actualizarNotas() {
@@ -966,7 +968,7 @@ public class NotasORM {
         Transaction tx = null;
         NotasORM notasORM = new NotasORM();
         notasORM.consultarTodosAlumnos();
-        
+
         try {
             tx = session.beginTransaction();
             // Pedir datos al usuario
@@ -1021,13 +1023,13 @@ public class NotasORM {
         }
     }
 
-  // Borrar notas de tabla notas
+    // Borrar notas de tabla notas
     public void borrarNotas() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         NotasORM notasORM = new NotasORM();
         notasORM.consultarTodosAlumnos();
-        
+
         try {
             tx = session.beginTransaction();
             // Pedir datos al usuario
