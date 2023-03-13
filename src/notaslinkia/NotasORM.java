@@ -807,45 +807,45 @@ public class NotasORM {
         }
     }
 
-    // Metodo para consultar todas las notas
+    // Metodo para consultar todas las notas con el nombre del alumno y el nombre del modulo
     public void consultarNotas() {
         Session session = HibernateUtil.getSessionFactory().openSession();
+    
         try {
             tx = session.beginTransaction();
-
-            // Obtener las notas de todos los módulos para el alumno dado
-            List<Notas> notas = session.createQuery("FROM Notas").list();
-
-            System.out.println("Notas de todos los alumnos:");
-
+    
+            // Obtener todas las notas con información de alumno y módulo
+            List<Notas> notas = session.createQuery("SELECT n FROM Notas n INNER JOIN n.alumnos a INNER JOIN n.modulos m").list();
+    
             // Imprimir encabezado de la tabla
             System.out.println("+------------+----------------------+-----------------+-------+");
             System.out.printf(
                     "| \033[35m%-10s\033[0m | \033[35m%-20s\033[0m | \033[35m%-15s\033[0m | \033[35m%-5s\033[0m |\n",
                     "ID Alumno", "Nombre Alumno", "Nombre Modulo", "Nota");
             System.out.println("+------------+----------------------+-----------------+-------+");
-
+    
             for (Notas nota : notas) {
-                Modulos modulo = session.get(Modulos.class, nota.getModulosId());
+                Alumnos alumno = nota.getAlumnos();
+                Modulos modulo = nota.getModulos();
                 float notaFloat = nota.getNotas();
-                Alumnos alumno = session.get(Alumnos.class, nota.getAlumnoId());
-
+    
                 System.out.printf("| %-10d | %-20s | %-15s | %-5.2f |\n", alumno.getIdAlumno(), alumno.getNombre(),
                         modulo.getNombre(), notaFloat);
                 System.out.println("+------------+----------------------+-----------------+-------+");
             }
-
+    
             tx.commit();
+    
         } catch (Exception ex) {
             if (tx != null) {
                 tx.rollback();
             }
             throw ex;
         } finally {
-
             session.close();
         }
     }
+    
 
     public boolean comprobarProfesor(String usuario, String password) {
 
