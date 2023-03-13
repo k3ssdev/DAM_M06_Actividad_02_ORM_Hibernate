@@ -50,6 +50,13 @@ public class TestORM {
             System.out.print(
                     "                                                         wwdP                                                                                 \n");
             System.out.println("\033[0m");
+            System.out.print("\033[35m");
+            System.out.println("Alberto Pérez del Río");
+            System.out.println("DAM - M06");
+            System.out.println("2023");
+    
+            System.out.println();
+            System.out.println();
 
             System.out.println("\033[33m ┌──────────────────┐\033[0m");
             System.out.println("\033[33m │  MENU PRINCIPAL  │\033[0m");
@@ -67,7 +74,7 @@ public class TestORM {
             System.out.println("\033[31m ╚═══════════════════╝\033[0m");
 
             System.out.print("\n\033[32m Selecciona una opción: \033[0m");
-
+            
             String opcion = sc.nextLine();
 
             switch (opcion) {
