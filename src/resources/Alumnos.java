@@ -69,9 +69,6 @@ public class Alumnos  implements java.io.Serializable {
         this.notases = notases;
     }
 
-
-
-
 }
 
 

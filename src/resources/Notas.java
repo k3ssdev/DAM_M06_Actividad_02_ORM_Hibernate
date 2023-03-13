@@ -1,6 +1,5 @@
 package resources;
-// Generated 09-mar-2023 22:01:34 by Hibernate Tools 4.3.1
-
+// Generated 12-mar-2023 16:24:19 by Hibernate Tools 4.3.1
 
 
 
@@ -10,58 +9,64 @@ package resources;
 public class Notas  implements java.io.Serializable {
 
 
-    private Integer idNotas;
-    private Alumnos alumnos;
-    private Modulos modulos;
-    private float notas;
+     private Integer idNotas;
+     private Integer idAlumno;
+     private Alumnos alumnos;
+     private Modulos modulos;
+     private float notas;
+    private Integer idModulo;
 
-   public Notas() {
-   }
+    public Notas() {
+    }
 
-   public Notas(Alumnos alumnos, Modulos modulos, float notas) {
-      this.alumnos = alumnos;
-      this.modulos = modulos;
-      this.notas = notas;
-   }
-  
-   public Integer getIdNotas() {
-       return this.idNotas;
-   }
-   
-   public void setIdNotas(Integer idNotas) {
-       this.idNotas = idNotas;
-   }
-   public Alumnos getAlumnos() {
-       return this.alumnos;
-   }
-   
-   public Integer getAlumnosId() {
-    return this.alumnos.getIdAlumno();
-}
-   public void setAlumnos(Alumnos alumnos) {
+    public Notas(Alumnos alumnos, Modulos modulos, float notas) {
        this.alumnos = alumnos;
-   }
-   public Modulos getModulos() {
-       return this.modulos;
-   }
-   
-   public Integer getModulosId() {
-    return this.modulos.getId();
-}
-
-   public void setModulos(Modulos modulos) {
        this.modulos = modulos;
-   }
-   public float getNotas() {
-       return this.notas;
-   }
-   
-   public void setNotas(float notas) {
        this.notas = notas;
-   }
+    }
+     
+    public Notas(int idAlumno, Integer idModulo, float notas) {
+        this.idAlumno = idAlumno;
+        this.idModulo = idModulo;
+        this.notas = notas;
+    }
 
+    public Integer getIdNotas() {
+        return this.idNotas;
+    }
+    
+    public void setIdNotas(Integer idNotas) {
+        this.idNotas = idNotas;
+    }
+    public Alumnos getAlumnos() {
+        return this.alumnos;
+    }
 
+    public Integer getAlumnoId() {
+        return this.getAlumnoId();
+    }
+    
+    public void setAlumnos(Alumnos alumnos) {
+        this.alumnos = alumnos;
+    }
+    public Modulos getModulos() {
+        return this.modulos;
+    }
 
+    public Integer getModulosId() {
+        return this.modulos.getId();
+    }
+    
+    public void setModulos(Modulos modulos) {
+        this.modulos = modulos;
+    }
+    public float getNotas() {
+        return this.notas;
+    }
+    
+    public void setNotas(float notas) {
+        this.notas = notas;
+    }
 
 }
 

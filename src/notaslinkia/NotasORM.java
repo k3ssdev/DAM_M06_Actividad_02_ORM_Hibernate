@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.hibernate.HibernateException;
+import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -207,37 +208,55 @@ public class NotasORM {
             }
             throw ex;
         } finally {
-            // Cerrar el objeto Scanner y la sesión de Hibernate
-            sc.close();
             session.close();
         }
     }
 
+    // Método para eliminar un alumno por su ID, mostrar primero el listado de
+    // alumnos
     public static void borrarAlumno() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduce el ID del alumno que quieres borrar:");
-        int id = scanner.nextInt();
-
+        // Crear un objeto Scanner para leer la entrada del usuario desde la consola
+        Scanner sc = new Scanner(System.in);
+        // Abrir una sesión de Hibernate
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        // Obtener el listado de alumnos con elñ método consultarTodosAlumnos();
+        NotasORM notasORM = new NotasORM();
+        notasORM.consultarTodosAlumnos();
         try {
-            // Iniciar transacción
-            tx = sesion.beginTransaction();
-            // Obtener el alumno con el ID proporcionado
-            Alumnos alumno = sesion.get(Alumnos.class, id);
-            // Si se encontró un alumno con el ID
-            if (alumno != null) {
-                // Borrar el alumno
-                sesion.delete(alumno);
-                // Confirmar la transacción
+            // Comenzar una transacción
+            tx = session.beginTransaction();
+            // Pedir al usuario que ingrese el ID del alumno a eliminar
+            System.out.println("\nIngrese el id del alumno a eliminar:");
+            int id = sc.nextInt();
+            sc.nextLine(); // Consumir la línea en blanco en el buffer
+            // Obtener el alumno seleccionado por su ID
+            Alumnos alumno = session.get(Alumnos.class, id);
+            // Mostrar el nombre del alumno seleccionado
+            System.out.println("Alumno seleccionado: " + alumno.getNombre());
+            // Preguntar al usuario si está seguro de eliminar el alumno
+            System.out.println("¿Está seguro de eliminar el alumno? (S/N)");
+            String respuesta = sc.nextLine();
+            // Si el usuario responde "S", eliminar el alumno
+            if (respuesta.equalsIgnoreCase("S")) {
+                // Eliminar el alumno de la base de datos
+                session.delete(alumno);
+                // Hacer commit a la transacción
                 tx.commit();
-                System.out.println("Alumno eliminado correctamente.");
-            } else { // Si no se encontró un alumno con el ID
-                System.out.println("No se encontró ningún alumno con el ID " + id);
+                // Mostrar un mensaje de éxito
+                System.out.println("Alumno eliminado.");
+            } else {
+                // Si el usuario no está seguro de eliminar el alumno, hacer rollback a la
+                // transacción
+                tx.rollback();
             }
-        } catch (Exception e) { // En caso de error
+        } catch (Exception ex) {
+            // Si ocurre algún error, hacer rollback a la transacción y lanzar la excepción
             if (tx != null) {
-                tx.rollback(); // Deshacer la transacción
+                tx.rollback();
             }
-            System.out.println("Error al intentar borrar el alumno: " + e.getMessage());
+            throw ex;
+        } finally {
+            session.close();
         }
     }
 
@@ -386,11 +405,14 @@ public class NotasORM {
         Scanner sc = new Scanner(System.in); // Se crea un objeto Scanner para obtener la entrada del usuario.
         Session session = HibernateUtil.getSessionFactory().openSession(); // Se obtiene una nueva sesión de Hibernate.
 
+        NotasORM notasORM = new NotasORM();
+        notasORM.consultarTodosAlumnos();
+
         try {
             tx = session.beginTransaction(); // Se inicia una nueva transacción.
 
             // Se pide al usuario que proporcione los detalles del alumno.
-            System.out.println("Ingrese el nombre del alumno:");
+            System.out.println("\nIngrese el nombre del alumno:");
             String nombre = sc.nextLine();
             System.out.println("Ingrese el nombre de usuario del alumno:");
             String nomUser = sc.nextLine();
@@ -423,17 +445,30 @@ public class NotasORM {
         // Abrir una nueva sesión de Hibernate
         Session session = HibernateUtil.getSessionFactory().openSession();
 
+        NotasORM notasORM = new NotasORM();
+        notasORM.listarModulos();
+
         try {
             // Iniciar una nueva transacción
             tx = session.beginTransaction();
 
             // Pedir al usuario que ingrese el nombre del nuevo módulo y guardarlo en una
             // variable
-            System.out.println("Ingrese el nombre del nuevo módulo:");
+            System.out.println("\nIngrese el nombre del nuevo módulo:");
             String nombre = sc.nextLine();
 
+            // Verificar si el módulo ya existe en la base de datos
+            Modulos modulo = (Modulos) session.createQuery("FROM Modulos WHERE nombre = :nombre")
+                    .setParameter("nombre", nombre).uniqueResult();
+
+            if (modulo != null) {
+                // Si el módulo ya existe, mostrar un mensaje de error y cancelar la transacción
+                System.out.println("Error: el módulo ya existe en la base de datos");
+                return;
+            }
+
             // Crear un nuevo objeto Modulos con el nombre ingresado
-            Modulos modulo = new Modulos(nombre);
+            modulo = new Modulos(nombre);
 
             // Guardar el objeto Modulos en la base de datos
             session.save(modulo);
@@ -461,8 +496,11 @@ public class NotasORM {
         // Abrir una nueva sesión de Hibernate
         Session session = HibernateUtil.getSessionFactory().openSession();
 
+        NotasORM notasORM = new NotasORM();
+        notasORM.listarModulos();
+
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduce el nombre del modulo que quieres borrar:");
+        System.out.println("\nIntroduce el nombre del modulo que quieres borrar:");
         String nombre = scanner.next();
 
         try {
@@ -548,42 +586,50 @@ public class NotasORM {
         Scanner sc = new Scanner(System.in);
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
+        NotasORM notasORM = new NotasORM();
+        notasORM.listarModulos();
+
         try {
             tx = session.beginTransaction();
-            System.out.println("Ingrese el id del módulo:");
-            int id = sc.nextInt();
-            sc.nextLine(); // Agregar esta línea para eliminar la línea en blanco del buffer
-            Modulos modulo = session.get(Modulos.class, id);
+            System.out.println("\nIngrese el nombre del módulo:");
+            String nombre = sc.nextLine();
+            Modulos modulo = (Modulos) session.createQuery("FROM Modulos WHERE nombre = :nombre")
+                    .setParameter("nombre", nombre).uniqueResult();
             if (modulo == null) {
-                System.out.println("El módulo con id " + id + " no existe.");
+                System.out.println("El módulo con nombre " + nombre + " no existe.");
                 return;
             }
             List<Notas> notas = session.createQuery("FROM Notas WHERE id_modulo = :id_modulo")
-                    .setParameter("id_modulo", id).list();
-            System.out.println("Alumnos que han cursado el módulo " + modulo.getNombre() + " con id " + id + ":");
-    
-            // Imprimir encabezado de la tabla en morado
-            System.out.println("+------------+-----------------+------------+----------------------+-------+");
+                    .setParameter("id_modulo", modulo.getId()).list();
+            System.out.println(
+                    "\nAlumnos que han cursado el módulo " + modulo.getNombre() + " con id " + modulo.getId() + ":");
+ 
+            // Imprimir encabezado de la tabla
+            System.out.println("+------------+----------------------+-----------------+-------+");
             System.out.printf(
-                    "| \033[35m%-10s\033[0m | \033[35m%-15s\033[0m | \033[35m%-10s\033[0m | \033[35m%-20s\033[0m | \033[35m%-5s\033[0m |\n",
-                    "ID Modulo", "Nombre Modulo", "ID Alumno",
-                    "Nombre Alumno", "Nota");
-            System.out.println("+------------+-----------------+------------+----------------------+-------+");
-    
-            // Imprimir cada registro en la tabla
+                    "| \033[35m%-10s\033[0m | \033[35m%-20s\033[0m | \033[35m%-15s\033[0m | \033[35m%-5s\033[0m |\n",
+                    "ID Alumno", "Nombre Alumno", "Nombre Modulo", "Nota");
+            System.out.println("+------------+----------------------+-----------------+-------+");
+
             for (Notas nota : notas) {
-                Alumnos alumno = session.get(Alumnos.class, nota.getAlumnosId());
+                
+                // Esta línea obtiene un objeto de la clase Alumnos utilizando el ID de alumno asociado a la nota
+                // Se utiliza el método "get" de la sesión de Hibernate para obtener el objeto de la base de datos
+                // La clase "Alumnos" se especifica como primer parámetro y se utiliza el método "getIdAlumno" de la nota para obtener el ID de alumno asociado
+                Alumnos alumno = session.get(Alumnos.class, nota.getAlumnos().getIdAlumno());
                 float notaFloat = nota.getNotas();
-                System.out.printf("| %-10d | %-15s | %-10d | %-20s | %-5.2f |\n", id, modulo.getNombre(),
-                        alumno.getIdAlumno(), alumno.getNombre(), notaFloat);
-                System.out.println("+------------+-----------------+------------+----------------------+-------+");
+
+                System.out.printf("| %-10d | %-20s | %-15s | %-5.2f |\n", alumno.getIdAlumno(), alumno.getNombre(),
+                        modulo.getNombre(), notaFloat);
+                System.out.println("+------------+----------------------+-----------------+-------+");
             }
+
             tx.commit();
         } catch (Exception ex) {
             if (tx != null) {
                 tx.rollback();
             }
-            throw ex;
+            System.out.println("Error al listar los alumnos por módulo: " + ex.getMessage());
         } finally {
             session.close();
         }
@@ -649,7 +695,7 @@ public class NotasORM {
             }
             throw ex;
         } finally {
-            
+
             session.close();
         }
     }
@@ -677,39 +723,126 @@ public class NotasORM {
         }
     }
 
+    // Mostrar tabla historial
     public void listarHistorial() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            tx = session.beginTransaction();
+
+            // Obtener todos los registros de la tabla historial
+            List<Historial> historial = session.createQuery("FROM Historial").list();
+
+            // Imprimir encabezado de la tabla
+            System.out.println("+------------+---------------------------+------------+---------------------------+");
+            System.out.printf(
+                    "| \033[35m%-10s\033[0m | \033[35m%-25s\033[0m | \033[35m%-10s\033[0m | \033[35m%-25s\033[0m |\n",
+                    "ID", "Tipo", "Usuario", "Detalle");
+            System.out.println("+------------+---------------------------+------------+---------------------------+");
+
+            // Imprimir cada registro en la tabla
+            for (Historial registro : historial) {
+                System.out.printf("| %-10d | %-25s | %-10s | %-25s |\n", registro.getId(), registro.getTipo(),
+                        registro.getUser(), registro.getDetalle());
+                System.out
+                        .println("+------------+---------------------------+------------+---------------------------+");
+            }
+
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw ex;
+        } finally {
+
+            session.close();
+        }
+
     }
 
     // metodo para consultar notas de un alumno, pasandole el usuario del alumno
     public void consultarNotasAlumno(String usuario) {
-        // Obtener el alumno con el nombre de usuario dado
-        Alumnos alumno = (Alumnos) sesion.createQuery("FROM Alumnos WHERE nomUser = :usuario")
-                .setParameter("usuario", usuario).uniqueResult();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            tx = session.beginTransaction();
 
-        // Obtener las notas de todos los módulos para el alumno dado
-        List<Notas> notas = sesion.createQuery("FROM Notas WHERE alumnos = :alumnos")
-                .setParameter("alumnos", alumno.getIdAlumno()).list();
+            // Obtener el alumno con el nombre de usuario dado
+            Alumnos alumno = (Alumnos) session.createQuery("FROM Alumnos WHERE nomUser = :usuario")
+                    .setParameter("usuario", usuario).uniqueResult();
 
-        System.out.println("Módulos cursados por " + alumno.getNombre() + " con id " + alumno.getIdAlumno() + ":");
+            // Obtener las notas de todos los módulos para el alumno dado
+            List<Notas> notas = session.createQuery("FROM Notas WHERE id_alumno = :idAlumno")
+                    .setParameter("idAlumno", alumno.getIdAlumno()).list();
 
-        // Imprimir encabezado de la tabla
-        System.out.println("+------------+----------------------+-----------------+-------+");
-        System.out.printf(
-                "| \033[35m%-10s\033[0m | \033[35m%-20s\033[0m | \033[35m%-15s\033[0m | \033[35m%-5s\033[0m |\n",
-                "ID Alumno", "Nombre Alumno", "Nombre Modulo", "Nota");
-        System.out.println("+------------+----------------------+-----------------+-------+");
+            System.out.println("Notas de " + alumno.getNombre() + " con id " + alumno.getIdAlumno() + ":");
 
-        for (Notas nota : notas) {
-            Alumnos alumnos = sesion.get(Alumnos.class, nota.getAlumnosId());
-            Modulos modulo = sesion.get(Modulos.class, nota.getAlumnosId());
-            float notaFloat = nota.getNotas();
-
-            System.out.printf("| %-10d | %-20s | %-15s | %-5.2f |\n", alumno.getIdAlumno(), alumno.getNombre(),
-                    modulo.getNombre(), notaFloat);
+            // Imprimir encabezado de la tabla
             System.out.println("+------------+----------------------+-----------------+-------+");
+            System.out.printf(
+                    "| \033[35m%-10s\033[0m | \033[35m%-20s\033[0m | \033[35m%-15s\033[0m | \033[35m%-5s\033[0m |\n",
+                    "ID Alumno", "Nombre Alumno", "Nombre Modulo", "Nota");
+            System.out.println("+------------+----------------------+-----------------+-------+");
+
+            for (Notas nota : notas) {
+                Modulos modulo = session.get(Modulos.class, nota.getModulosId());
+                float notaFloat = nota.getNotas();
+
+                System.out.printf("| %-10d | %-20s | %-15s | %-5.2f |\n", alumno.getIdAlumno(), alumno.getNombre(),
+                        modulo.getNombre(), notaFloat);
+                System.out.println("+------------+----------------------+-----------------+-------+");
+            }
+
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw ex;
+        } finally {
+
+            session.close();
         }
     }
-    
+
+    // Metodo para consultar todas las notas
+    public void consultarNotas() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            tx = session.beginTransaction();
+
+            // Obtener las notas de todos los módulos para el alumno dado
+            List<Notas> notas = session.createQuery("FROM Notas").list();
+
+            System.out.println("Notas de todos los alumnos:");
+
+            // Imprimir encabezado de la tabla
+            System.out.println("+------------+----------------------+-----------------+-------+");
+            System.out.printf(
+                    "| \033[35m%-10s\033[0m | \033[35m%-20s\033[0m | \033[35m%-15s\033[0m | \033[35m%-5s\033[0m |\n",
+                    "ID Alumno", "Nombre Alumno", "Nombre Modulo", "Nota");
+            System.out.println("+------------+----------------------+-----------------+-------+");
+
+            for (Notas nota : notas) {
+                Modulos modulo = session.get(Modulos.class, nota.getModulosId());
+                float notaFloat = nota.getNotas();
+                Alumnos alumno = session.get(Alumnos.class, nota.getAlumnoId());
+
+                System.out.printf("| %-10d | %-20s | %-15s | %-5.2f |\n", alumno.getIdAlumno(), alumno.getNombre(),
+                        modulo.getNombre(), notaFloat);
+                System.out.println("+------------+----------------------+-----------------+-------+");
+            }
+
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw ex;
+        } finally {
+
+            session.close();
+        }
+    }
 
     public boolean comprobarProfesor(String usuario, String password) {
 
@@ -739,5 +872,208 @@ public class NotasORM {
 
         // Si el profesor no existe, devolver false
         return false;
+    }
+
+    // Metodo para registrar acciones en tabla historial
+    public void registroHistorial(String tipo, int userId, String detalle) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            tx = session.beginTransaction();
+
+            // Crear objeto historial
+            Historial historial = new Historial();
+            historial.setTipo(tipo);
+            historial.setUser(userId);
+            historial.setDetalle(detalle);
+
+            // Guardar objeto historial en la base de datos
+            session.save(historial);
+
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw ex;
+        } finally {
+
+            session.close();
+        }
+    }
+
+    // Obtener id de profesor con el nombre de usuario proporcionado
+    public Integer getIdProfesor(String nombreUsuario) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Profesores profesor = (Profesores) session.createQuery("from Profesores where nomUser = :nombreUsuario")
+                    .setParameter("nombreUsuario", nombreUsuario).uniqueResult();
+            return profesor.getId();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            session.close();
+        }
+    }
+
+    public void insertarNotas() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        NotasORM notasORM = new NotasORM();
+        notasORM.consultarTodosAlumnos();
+    
+        try {
+            tx = session.beginTransaction();
+            Scanner sc = new Scanner(System.in);
+    
+            // Pedir datos al usuario
+            System.out.println("Introduce el id del alumno:");
+            int idAlumno = sc.nextInt();
+            System.out.println();
+            notasORM.listarModulos();
+            System.out.println("Introduce el id del módulo:");
+            int idModulo = sc.nextInt();
+            System.out.println("Introduce la nota:");
+            float nota = sc.nextFloat();
+    
+            // Obtener el objeto Alumnos correspondiente al idAlumno
+            Alumnos alumno = session.get(Alumnos.class, idAlumno);
+    
+            // Obtener el objeto Modulos correspondiente al idModulo
+            Modulos modulo = session.get(Modulos.class, idModulo);
+    
+            // Crear el objeto Notas y asignarle el alumno, módulo y nota correspondientes
+            Notas notas = new Notas(alumno, modulo, nota);
+    
+            // Guardar el objeto Notas en la base de datos
+            session.save(notas);
+    
+            tx.commit();
+            System.out.println("Nota insertada correctamente.");
+        } catch (Exception ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            ex.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+    
+
+    // Actualizar nota de un alumno en la base de datos
+    public void actualizarNotas() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        NotasORM notasORM = new NotasORM();
+        notasORM.consultarTodosAlumnos();
+        
+        try {
+            tx = session.beginTransaction();
+            // Pedir datos al usuario
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Introduce el id del alumno:");
+            int idAlumno = sc.nextInt();
+            notasORM.listarModulosPorAlumno(null);
+            System.out.println("Introduce el nombre del modulo:");
+            String nombreModulo = sc.next();
+            System.out.println("Introduce la nota");
+            float nota = sc.nextFloat();
+
+            // Obtener el id del módulo con el nombre dado
+            Modulos modulo = (Modulos) session.createQuery("FROM Modulos WHERE nombre = :nombreModulo")
+                    .setParameter("nombreModulo", nombreModulo).uniqueResult();
+
+            // Verificar si se encontró el módulo
+            if (modulo == null) {
+                System.out.println("El módulo no existe");
+                return;
+            }
+
+            // Obtener la nota del alumno en el módulo dado
+            Notas notaObj = (Notas) session
+                    .createQuery("FROM Notas WHERE id_alumno = :idAlumno AND id_modulo = :idModulo")
+                    .setParameter("idAlumno", idAlumno).setParameter("idModulo", modulo.getId()).uniqueResult();
+
+            // Verificar si se encontró la nota
+            if (notaObj == null) {
+                System.out.println("No se encontró la nota del alumno en el módulo dado");
+                return;
+            }
+
+            // Actualizar la nota
+            notaObj.setNotas(nota);
+
+            // Guardar objeto nota en la base de datos
+            session.update(notaObj);
+
+            // Obtener el nombre del alumno
+            Alumnos alumno = (Alumnos) session.createQuery("FROM Alumnos WHERE id_alumno = :idAlumno")
+                    .setParameter("idAlumno", idAlumno).uniqueResult();
+
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw ex;
+        } finally {
+            session.close();
+        }
+    }
+
+  // Borrar notas de tabla notas
+    public void borrarNotas() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        NotasORM notasORM = new NotasORM();
+        notasORM.consultarTodosAlumnos();
+        
+        try {
+            tx = session.beginTransaction();
+            // Pedir datos al usuario
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Introduce el id del alumno:");
+            int idAlumno = sc.nextInt();
+            notasORM.listarModulosPorAlumno(null);
+            System.out.println("Introduce el nombre del modulo:");
+            String nombreModulo = sc.next();
+
+            // Obtener el id del módulo con el nombre dado
+            Modulos modulo = (Modulos) session.createQuery("FROM Modulos WHERE nombre = :nombreModulo")
+                    .setParameter("nombreModulo", nombreModulo).uniqueResult();
+
+            // Verificar si se encontró el módulo
+            if (modulo == null) {
+                System.out.println("El módulo no existe");
+                return;
+            }
+
+            // Obtener la nota del alumno en el módulo dado
+            Notas notaObj = (Notas) session
+                    .createQuery("FROM Notas WHERE id_alumno = :idAlumno AND id_modulo = :idModulo")
+                    .setParameter("idAlumno", idAlumno).setParameter("idModulo", modulo.getId()).uniqueResult();
+
+            // Verificar si se encontró la nota
+            if (notaObj == null) {
+                System.out.println("No se encontró la nota del alumno en el módulo dado");
+                return;
+            }
+
+            // Borrar la nota
+            session.delete(notaObj);
+
+            // Obtener el nombre del alumno
+            Alumnos alumno = (Alumnos) session.createQuery("FROM Alumnos WHERE id_alumno = :idAlumno")
+                    .setParameter("idAlumno", idAlumno).uniqueResult();
+
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw ex;
+        } finally {
+            session.close();
+        }
     }
 }
