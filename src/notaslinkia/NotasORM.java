@@ -10,18 +10,17 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.hibernate.HibernateException;
-import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
+
 import resources.Alumnos;
-import resources.Profesores;
-import resources.Notas;
-import resources.Modulos;
-import resources.Historial;
 import resources.HibernateUtil;
+import resources.Historial;
+import resources.Modulos;
+import resources.Notas;
+import resources.Profesores;
 
 /**
  *
