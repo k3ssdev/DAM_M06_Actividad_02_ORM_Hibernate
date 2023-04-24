@@ -1,4 +1,5 @@
-# Proyecto de sistema de gestión de notas de Linkia
+# [DAM][M06] Actividad 2 - Base de datos con JDBC y ORM
+## Proyecto de sistema de gestión de notas de Linkia
 
 Este proyecto es una aplicación de Java que utiliza Hibernate para interactuar con una base de datos MySQL que contiene información sobre estudiantes, profesores, módulos y notas.
 
