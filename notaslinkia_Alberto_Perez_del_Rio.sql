@@ -194,23 +194,6 @@ INSERT INTO `profesores` (`id`, `nombre`, `nom_user`, `password`) VALUES
 (4, 'Miguel Álvarez', 'miguel', 'clave3'),
 (5, 'Sofía Ruiz', 'sofia', 'clave4');
 
---
--- Volcado de datos para la tabla `notas`
---
-
-INSERT INTO `notas` (`id_notas`, `id_alumno`, `id_modulo`, `notas`) VALUES
-(1, 1, 1, 8.5),
-(2, 1, 2, 7.2),
-(3, 1, 3, 9.1),
-(4, 2, 1, 7.8),
-(5, 2, 2, 6.5),
-(6, 2, 3, 8.2),
-(7, 3, 1, 7.1),
-(8, 3, 2, 8.9),
-(9, 3, 3, 6.7),
-(10, 4, 1, 6.9),
-(11, 4, 2, 7.6),
-(12, 4, 3, 8.3);
 
 --
 -- Volcado de datos para la tabla `modulos`
@@ -233,6 +216,7 @@ INSERT INTO `modulos` (`id`, `nombre`) VALUES
 (14, 'M14');
 
 
+
 --
 -- Volcado de datos para la tabla `historial`
 --
@@ -253,6 +237,25 @@ INSERT INTO `alumnos` (`id_alumno`, `nombre`, `nom_user`, `password`) VALUES
 (3, 'Ana Martínez', 'ana', 'clave4'),
 (4, 'Pedro Picapiedra', 'pica', '12345'),
 (5, 'Sandra Gomez', 'sandra', '12345');
+
+
+--
+-- Volcado de datos para la tabla `notas`
+--
+
+INSERT INTO `notas` (`id_notas`, `id_alumno`, `id_modulo`, `notas`) VALUES
+(1, 1, 1, 8.5),
+(2, 1, 2, 7.2),
+(3, 1, 3, 9.1),
+(4, 2, 1, 7.8),
+(5, 2, 2, 6.5),
+(6, 2, 3, 8.2),
+(7, 3, 1, 7.1),
+(8, 3, 2, 8.9),
+(9, 3, 3, 6.7),
+(10, 4, 1, 6.9),
+(11, 4, 2, 7.6),
+(12, 4, 3, 8.3);
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
